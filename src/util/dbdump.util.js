@@ -1,6 +1,6 @@
-require("./src/db/mongoose");
+require("../db/mongoose");
 
-const Tool = require("./src/models/tool.model");
+const Tool = require("../models/tool.model");
 
 leariningTool = [
   { link: "http://hacksplaining.com/", name: "hacking tool", type: 1 },
