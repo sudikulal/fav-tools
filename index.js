@@ -2,6 +2,7 @@ const bodyParser = require("body-parser");
 const express = require("express");
 const app = express();
 require("./src/db/mongoose.js");
+require("./src/util/bot.util.js")
 
 const port = process.env.PORT || 3000;
 

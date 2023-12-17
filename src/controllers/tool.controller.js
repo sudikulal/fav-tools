@@ -1,6 +1,6 @@
 const Tool = require("../models/tool.model.js");
 
-class BookClass {
+class ToolClass {
   async addTool(req, res) {
     try {
       const { name, link, type, description } = req.body;
@@ -86,4 +86,4 @@ class BookClass {
   }
 }
 
-module.exports = new BookClass();
+module.exports = new ToolClass();
