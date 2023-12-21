@@ -62,5 +62,5 @@ bot.catch((err, ctx) => {
   handleErrors(err, ctx.chat.id);
 });
 
-// Start the bot
-bot.launch().then(() => console.log('Bot is running...'));
+module.exports = bot;
+

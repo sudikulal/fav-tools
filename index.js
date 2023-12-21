@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const { Telegraf, Markup } = require('telegraf');
 require("dotenv").config()
+require("./src/db/mongoose")
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -9,10 +9,10 @@ const port = process.env.PORT || 3000;
 // Middleware for parsing JSON requests
 app.use(bodyParser.json());
 
-// Create Telegraf bot
-const bot = new Telegraf(process.env.BOT_TOKEN);
+app.get("/",(req,res)=>res.send("hello"))
 
-require("./src/util/telegraf.util")
+// Create Telegraf bot
+const bot = require("./src/util/telegraf.util")
 
 // Set up a webhook endpoint for receiving updates
 app.post(`/bot${process.env.BOT_TOKEN}`, (req, res) => {
@@ -22,10 +22,5 @@ app.post(`/bot${process.env.BOT_TOKEN}`, (req, res) => {
 // Start the Express server
 app.listen(port, () => {
   console.log(`Express server is listening on port ${port}`);
-  
-  // Set up webhook when the server is started
-  const webhookUrl = `https://fav-tool.cyclic.app/bot${process.env.BOT_TOKEN}`;
-  bot.telegram.setWebhook(webhookUrl).then(() => {
-    console.log(`Webhook set to ${webhookUrl}`);
-  });
 });
+bot.launch().then(() => console.log('Bot is running...'));
