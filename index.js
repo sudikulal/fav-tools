@@ -1,105 +1,31 @@
-const bodyParser = require("body-parser");
-const express = require("express");
+const express = require('express');
+const bodyParser = require('body-parser');
+const { Telegraf, Markup } = require('telegraf');
+require("dotenv").config()
+
 const app = express();
-require("./src/db/mongoose.js");
-const TelegramBot = require("node-telegram-bot-api");
-require("dotenv").config();
-
-const token = process.env.BOT_TOKEN;
-const bot = new TelegramBot(token);
-const Tool = require("./src/models/tool.model.js");
-
-// Function to send messages with Markdown parsing
-async function sendMessageWithMarkdown(chatId, list) {
- const text = list.map(({ name, link }) => `*${name} :* [Link](${link})`)
-  .join("\n");
-  await bot.sendMessage(chatId, text, { parse_mode: "markdown" });
-}
-
-// Function to handle errors
-function handleErrors(error, chatId) {
-  console.error("Error:", error);
-  bot.sendMessage(chatId, "An error occurred. Please try again later.");
-}
-
-bot.on("message", async (msg) => {
-  const chatId = msg.chat.id;
-  const messages = msg.text.split(" ");
-  const messageText = messages[0].toLowerCase(); 
-  try {
-    switch (messageText) {
-      case "/start":
-        return await bot.sendMessage(
-          chatId,
-          "Welcome to useful site collection, check menu for commands"
-        );
-
-      case "/list":
-        const toolList = await Tool.find({}, "name link");
-        return await sendMessageWithMarkdown(chatId, toolList);
-
-      case "/learn":
-      case "/helpers":
-      case "/job":
-      case "/work":
-        const type = { "/learn": 1, "/helpers": 2, "/job": 3, "/work": 4 };
-        const typeToolList = await Tool.find(
-          { type: type[messageText] },
-          "name link"
-        );
-        return await sendMessageWithMarkdown(chatId, typeToolList);
-
-      case "/search":
-        const keyword = messages.slice(1).join(" ");
-        const regex = new RegExp(keyword, "i");
-        const searchResults = await Tool.find(
-          {
-            $or: [
-              { name: { $regex: regex } },
-              { link: { $regex: regex } },
-              { description: { $regex: regex } },
-            ],
-          },
-          "name link"
-        );
-
-        if (searchResults.length) {
-          return await sendMessageWithMarkdown(chatId, searchResults);
-        } else {
-          return await bot.sendMessage(chatId, "not found");
-        }
-
-      default:
-        return await bot.sendMessage(chatId, "command not found");
-    }
-  } catch (error) {
-    handleErrors(error, chatId);
-  }
-});
-
 const port = process.env.PORT || 3000;
 
-const toolRouter = require("./src/routes/tool.route.js");
+// Middleware for parsing JSON requests
+app.use(bodyParser.json());
 
+// Create Telegraf bot
+const bot = new Telegraf(process.env.BOT_TOKEN);
 
-app.use(express.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+require("./src/util/telegraf.util")
 
-app.get("/", (req, res) => {
-  res.send("hello");
+// Set up a webhook endpoint for receiving updates
+app.post(`/bot${process.env.BOT_TOKEN}`, (req, res) => {
+  bot.handleUpdate(req.body, res);
 });
 
-// Webhook for Telegram updates
-app.post(`/bot${token}`, (req, res) => {
-  bot.processUpdate(req.body);
-  res.sendStatus(200);
-});
-
-app.use(toolRouter);
-
-// Use polling as a fallback
-bot.startPolling();
-
+// Start the Express server
 app.listen(port, () => {
-  console.log("server is hosted on :", port);
+  console.log(`Express server is listening on port ${port}`);
+  
+  // Set up webhook when the server is started
+  const webhookUrl = `https://fav-tool.cyclic.app/bot${process.env.BOT_TOKEN}`;
+  bot.telegram.setWebhook(webhookUrl).then(() => {
+    console.log(`Webhook set to ${webhookUrl}`);
+  });
 });
