@@ -2,12 +2,14 @@ const express = require('express');
 const bodyParser = require('body-parser');
 require("dotenv").config()
 require("./src/db/mongoose")
+const toolRoute = require('./src/routes/tool.route')
 
 const app = express();
 const port = process.env.PORT || 3000;
 
 // Middleware for parsing JSON requests
 app.use(bodyParser.json());
+app.use(toolRoute)
 
 app.get("/",(req,res)=>res.send("hello"))
 
