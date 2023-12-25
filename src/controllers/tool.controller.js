@@ -37,10 +37,10 @@ class ToolClass {
       res.json({ message: "success", tools });
     } catch (error) {
       console.error(error);
-      res.status(500).json({ message: "Error fetching books" });
+      res.status(500).json({ message: "Error fetching tools" });
     }
   }
- 
+
   async getToolByType(req, res) {
     try {
       const tool = await Tool.find({ type: req.params.type });
@@ -68,7 +68,7 @@ class ToolClass {
       res.json({ message: "tool updated successfully", tool: updatedTool });
     } catch (error) {
       console.error(error);
-      res.status(500).json({ message: "Error updating the book" });
+      res.status(500).json({ message: "Error updating the tool" });
     }
   }
 
@@ -78,10 +78,33 @@ class ToolClass {
       if (!deletedTool)
         return res.status(404).json({ message: "Tool not found" });
 
-      res.json({ message: "Tool deleted successfully", book: deletedTool });
+      res.json({ message: "Tool deleted successfully", tool: deletedTool });
     } catch (error) {
       console.error(error);
-      res.status(500).json({ message: "Error deleting the book" });
+      res.status(500).json({ message: "Error deleting the tool" });
+    }
+  }
+
+  async searchTool(req, res) {
+    try {
+      console.log(req.query);
+      const { search } = req.query;
+      if (!search)
+        return res.status(400).json({ message: "search key cannot be empty" });
+
+      const regex = new RegExp(search, "i");
+      const searchResults = await Tool.find({
+        $or: [
+          { name: { $regex: regex } },
+          { link: { $regex: regex } },
+          { description: { $regex: regex } },
+        ],
+      });
+
+      res.json({ message: "success", tool: searchResults });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Error searching the tool" });
     }
   }
 }

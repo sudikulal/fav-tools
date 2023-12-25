@@ -5,10 +5,7 @@ const toolController = require("../controllers/tool.controller");
 // Route to view a list of all tool
 router.get("/tool/list", toolController.getAllTools);
 
-// Route to view details of a specific book by its ID
-router.get("/tool/:type", toolController.getToolByType);
-
-// Route to update a tool's details
+// Route to add a tool
 router.post("/tool/add", toolController.addTool);
 
 // Route to update a tool's details
@@ -17,5 +14,11 @@ router.put("/tool/:id", toolController.updateTool);
 // Route to delete a tool by its ID
 router.delete("/tool/:id", toolController.deleteTool);
 
+// Route for searching tools
+router.get("/tool/search", toolController.searchTool);
+
+// Route to view details of a specific tool by its type
+router.get("/tool/:type", toolController.getToolByType);
+
+
 module.exports = router;
-  
