@@ -1,19 +1,23 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require("cors");
+const cookieParser = require('cookie-parser');
 
 require("dotenv").config()
 require("./src/db/mongoose")
+const userRoute = require('./src/routes/user.route')
 const toolRoute = require('./src/routes/tool.route')
 
 const app = express();
 const port = process.env.PORT || 3000;
 
-// Middleware for parsing JSON requests
 app.use(cors({ origin: "*" }));
+app.use(cookieParser());
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(userRoute)
 app.use(toolRoute)
-
+ 
 app.get("/",(req,res)=>res.send("hello"))
 
 // Create Telegraf bot
