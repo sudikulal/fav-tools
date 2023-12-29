@@ -2,7 +2,7 @@ const TelegramBot = require("node-telegram-bot-api");
 require("dotenv").config();
 
 const token = process.env.BOT_TOKEN;
-const bot = new TelegramBot(token, { polling: true });
+const bot = new TelegramBot(token);
 const Tool = require("../models/tool.model");
 
 // Function to send messages with Markdown parsing
