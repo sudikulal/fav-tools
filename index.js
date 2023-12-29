@@ -21,15 +21,17 @@ app.use(toolRoute)
 app.get("/",(req,res)=>res.send("hello"))
 
 // Create Telegraf bot
-const bot = require("./src/util/telegraf.util")
+// const bot = require("./src/util/telegraf.util")
 
-// Set up a webhook endpoint for receiving updates
-app.post(`/bot${process.env.BOT_TOKEN}`, (req, res) => {
-  bot.handleUpdate(req.body, res);
-});
+require("./src/util/bot.util")
+
+// // Set up a webhook endpoint for receiving updates
+// app.post(`/bot${process.env.BOT_TOKEN}`, (req, res) => {
+//   bot.handleUpdate(req.body, res);
+// });
 
 // Start the Express server
 app.listen(port, () => {
   console.log(`Express server is listening on port ${port}`);
+  // bot.launch().then(() => console.log('Bot is running...'));
 });
-bot.launch().then(() => console.log('Bot is running...'));
