@@ -11,9 +11,6 @@ const port = process.env.PORT || 3000;
 app.use(cors({ origin: "*" }));
 app.use(cookieParser());
 
-const auth = require("./src/middleware/auth");
-app.use(auth);
-
 require("./src/db/mongoose");
 const userRoute = require("./src/routes/user.route");
 const toolRoute = require("./src/routes/tool.route");
