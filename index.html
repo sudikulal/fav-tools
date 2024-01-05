@@ -353,10 +353,9 @@
     }
 
 
-    function deleteTool(id) {
-      // Display an alert to the user
+    async function deleteTool(id) {
+      await login()
       var userResponse = confirm("Are you sure you want to delete the site?");
-      // Check if the user clicked "OK"
       if (userResponse) {
         const url = new URL(`${apiUrl}/tool/${id}`)
         processData("DELETE", url

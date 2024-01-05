@@ -9,14 +9,14 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 app.use(cors({ origin: "*" }));
+app.use(express.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 require("./src/db/mongoose");
 const userRoute = require("./src/routes/user.route");
 const toolRoute = require("./src/routes/tool.route");
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
 app.use(userRoute);
 app.use(toolRoute);
 
