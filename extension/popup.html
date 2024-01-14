@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Website Tracker</title>
+  <script src="popup.js"></script>
+</head>
+
+<body>
+  <div id="trackFormContainer">
+    <form id="trackForm" accept-charset="UTF-8">
+      <label for="websiteName">Website Name:</label>
+      <input type="text" id="websiteName" name="websiteName" required>
+
+      <label for="websiteURL">Website URL:</label>
+      <input type="url" id="websiteURL" name="websiteURL" required>
+
+      <label for="description">Description:</label>
+      <input id="description" name="description"></input>
+
+      <label for="category">Category:</label>
+      <select id="category" name="category">
+        <option value="1">Learn</option>
+        <option value="2">Helper</option>
+        <option value="3">Job</option>
+        <option value="4">Work</option>
+      </select>
+
+      <button type="submit">Add Website</button>
+    </form>
+  </div>
+  <div id="successMessage" style="display: none;">
+    <p>Website is added successfully!</p>
+  </div>
+  <div id="failedMessage" style="display: none;">
+    <p>Something went wrong</p>
+  </div>
+</body>
+
+</html>
